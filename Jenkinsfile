@@ -3,7 +3,7 @@ pipeline {
 
   environment{
     DOKCER_HUB_CREDENTIALS = credentials('mentoring-dockerhub')
-    EMAIL_ADDRESS = "kankoffi36@gmail.com"
+    EMAIL_ADDRESS = "kankoffi36@gmail.com "
     REPOSITORY_DOCKER_HUB =" ikhela/mentoring"
 
   }
