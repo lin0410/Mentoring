@@ -19,6 +19,9 @@ RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
 # Supprimez les fichiers temporaires et nettoyez le cache apt
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN usermod -aG 1001 jenkins
+# RUN usermod -aG 1001 jenkins
+RUN usermod -aG docker jenkins
+# RUN chown root:docker /var/run/docker.sock
+
 
 USER jenkins
