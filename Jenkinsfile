@@ -2,7 +2,7 @@ pipeline {
   agent any 
 
   environment{
-    DOKCER_HUB_CREDENTIALS = credentials('mentoring-dockerhub')
+    DOKCER_HUB_CREDENTIALS = credentials('crd_docker_hub')
     EMAIL_ADDRESS = "kankoffi36@gmail.com"
     REPOSITORY_DOCKER_HUB =" ikhela/mentoring"
 
