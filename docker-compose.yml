@@ -6,37 +6,7 @@ x-defaults: &defaults
   env_file:
       - ./.env
   
-
 services:
-  db:
-    image: ${PG_IMG}
-    container_name: db
-    restart: always
-    ports:
-      - ${PG_LOCAL_PORT}:${PG_DOCKER_PORT}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./apps/db/:/docker-entrypoint-initdb.d  
-
-    <<: *defaults
-    environment:
-      - POSTGRES_DB=${PG_DB}
-      - POSTGRES_USER=${PG_USER}
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
-
-  adminer:
-    image: ${ADMINER_IMG}
-    depends_on:
-      - db
-    ports:
-      - ${ADMINER_LOCAL_PORT}:${ADMINER_DOCKER_PORT}
-    <<: *defaults
-    # healthcheck:
-    #       test: ["CMD-SHELL", "pg_isready -U postgres"]
-    #       interval: 5s
-    #       timeout: 5s
-    #       retries: 5
-
   web:
     container_name: ${WEB_NAME}
     build:
@@ -67,8 +37,6 @@ services:
     #   - ./apps/${API_NAME}/:/app/{API_NAME}
     #   - /app/${API_NAME}/node_modules  
 
-volumes:
-  postgres_data:
 
 networks:
   app_network:

@@ -1,0 +1,67 @@
+version: "3"
+
+x-defaults: &defaults
+  networks:
+    - ${NETWORK_CONTAINER}
+  env_file:
+      - ./.env
+      
+services:
+  sonarqube:
+    image: ${SONARQUBE}
+    container_name: sonarqube
+    restart: always
+    depends_on:
+      - sonardb
+    <<: *defaults
+    environment:
+      SONAR_JDBC_URL: ${SONAR_UR}
+      SONAR_JDBC_USERNAME: ${SONAR_USER}
+      SONAR_JDBC_PASSWORD: ${SONAR_PASSWORD}
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - ${SONAR_LOCAL_PORT}:${SONAR_DOCKER_PORT}
+    
+  sonardb:
+    image: ${PG_IMG}
+    environment:
+      POSTGRES_USER: ${SONAR_USER}
+      POSTGRES_PASSWORD: ${SONAR_USER}
+    volumes:
+      - postgresonar_data:/var/lib/postgresql/data
+  
+  mentoratdb:
+    image: ${PG_IMG}
+    container_name: db
+    restart: always
+    ports:
+      - ${PG_LOCAL_PORT}:${PG_DOCKER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./apps/db/:/docker-entrypoint-initdb.d  
+    <<: *defaults
+    environment:
+      - POSTGRES_DB=${PG_DB}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+
+  adminer:
+    image: ${ADMINER_IMG}
+    depends_on:
+      - mentoratdb
+      - sonardb
+    ports:
+      - ${ADMINER_LOCAL_PORT}:${ADMINER_DOCKER_PORT}
+    <<: *defaults
+
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  postgresql:
+  postgres_data:
+  postgresonar_data:
