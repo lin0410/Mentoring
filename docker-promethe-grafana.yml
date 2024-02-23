@@ -21,8 +21,8 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    expose:
-      - 9090
+    ports:
+      - "9090:9090"
     <<: *defaults
     labels:
       org.label-schema.group: "monitoring"
@@ -36,8 +36,8 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     restart: unless-stopped
-    expose:
-      - 9093
+    ports:
+      - "9093:9093"
     <<: *defaults
     labels:
       org.label-schema.group: "monitoring"
@@ -55,8 +55,8 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
-    expose:
-      - 9100
+    ports:
+      - "9100:9100"
     <<: *defaults
     labels:
       org.label-schema.group: "monitoring"
@@ -73,8 +73,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
-    expose:
-      - 3000
+    ports:
+      - "3000:3000"
     <<: *defaults
     labels:
       org.label-schema.group: "monitoring"
