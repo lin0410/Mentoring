@@ -12,10 +12,9 @@ services:
     container_name: sonarqube
     restart: always
     depends_on:
-      - sonardb
-    <<: *defaults
+      - db
     environment:
-      SONAR_JDBC_URL: ${SONAR_UR}
+      SONAR_JDBC_URL: ${SONAR_URL}
       SONAR_JDBC_USERNAME: ${SONAR_USER}
       SONAR_JDBC_PASSWORD: ${SONAR_PASSWORD}
     volumes:
@@ -24,44 +23,59 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
     ports:
       - ${SONAR_LOCAL_PORT}:${SONAR_DOCKER_PORT}
-    
-  sonardb:
+    <<: *defaults
+
+     
+  db:
     image: ${PG_IMG}
+    container_name: postgresql
+    restart: always
     environment:
       POSTGRES_USER: ${SONAR_USER}
       POSTGRES_PASSWORD: ${SONAR_USER}
-    volumes:
-      - postgresonar_data:/var/lib/postgresql/data
-  
-  mentoratdb:
-    image: ${PG_IMG}
-    container_name: db
-    restart: always
+      POSTGRES_DB: ${SONAR_DB}
     ports:
-      - ${PG_LOCAL_PORT}:${PG_DOCKER_PORT}
+    - ${PG_LOCAL_PORT}:${PG_DOCKER_PORT}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./apps/db/:/docker-entrypoint-initdb.d  
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
     <<: *defaults
-    environment:
-      - POSTGRES_DB=${PG_DB}
-      - POSTGRES_USER=${PG_USER}
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
+
+  
+  # mentoratdb:
+  #   image: ${PG_IMG}
+  #   container_name: mentoratdb
+  #   restart: always
+  #   ports:
+  #     - ${PG_LOCAL_PORT}:${PG_DOCKER_PORT}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #     - ./apps/db/:/docker-entrypoint-initdb.d  
+  #   environment:
+  #     - POSTGRES_DB=${PG_DB}
+  #     - POSTGRES_USER=${PG_USER}
+  #     - POSTGRES_PASSWORD=${PG_PASSWORD}
+  #   <<: *defaults
+
 
   adminer:
     image: ${ADMINER_IMG}
     depends_on:
-      - mentoratdb
-      - sonardb
+      # - mentoratdb
+      - db
     ports:
       - ${ADMINER_LOCAL_PORT}:${ADMINER_DOCKER_PORT}
     <<: *defaults
 
+networks:
+  app_network:
+    external: true
 
 volumes:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
   postgresql:
-  postgres_data:
-  postgresonar_data:
+  # postgres_data:
+  # postgresonar_data:
+  postgresql_data:
