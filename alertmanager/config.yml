@@ -1,11 +1,27 @@
+# route:
+#     receiver: 'slack'
+
+# receivers:
+#     - name: 'slack'
+#       slack_configs:
+#           - send_resolved: true
+#             text: "{{ .CommonAnnotations.description }}"
+#             username: 'Prometheus'
+#             channel: '#<channel-name>'
+#             api_url: 'https://hooks.slack.com/services/<webhook-id>'
 route:
-    receiver: 'slack'
+  receiver: 'mail'
+  repeat_interval: 4h
+  group_by: [ alertname ]
 
 receivers:
-    - name: 'slack'
-      slack_configs:
-          - send_resolved: true
-            text: "{{ .CommonAnnotations.description }}"
-            username: 'Prometheus'
-            channel: '#<channel-name>'
-            api_url: 'https://hooks.slack.com/services/<webhook-id>'
+  - name: 'mail'
+    email_configs:
+      - smarthost: 'smtp.gmail.com:465'
+        auth_username: 'kankoffi36@gmail.com'
+        auth_password: "nqdn srfi chan hhph"
+        from: 'kankoffi36@gmail.com'
+        to: 'kankoffi36@gmail.com'
+
+
+
