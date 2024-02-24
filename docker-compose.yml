@@ -27,9 +27,7 @@ services:
       context: .
       dockerfile: ./apps/${API_NAME}/Dockerfile
     image: api-nest:latest
-    <<: *defaults
-    depends_on:
-      - db    
+    <<: *defaults   
     restart: always
     ports:
       - ${API_LOCAL_PORT}:${API_DOCKER_PORT}
