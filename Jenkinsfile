@@ -2,7 +2,7 @@ pipeline {
   agent any 
   tools{
         jdk 'jdk17'
-        nodejs 'node16'
+        nodejs 'node20'
   }
   environment{
     DOKCER_HUB_CREDENTIALS = credentials('mentoring-dockerhub')
