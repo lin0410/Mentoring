@@ -39,6 +39,23 @@ pipeline {
             }
         } 
     }
+    // install dependencies 
+
+    // for owasp scan 
+    stage("OWASP FS SCAN"){
+      steps{
+        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        dependencyCheckPublish pattern: '**/dependency-check-report.xml'
+      }
+    }
+
+    // add trivy Scan for image 
+    stage('TRIVY FS SCAN'){
+      steps{
+        sh 'trivy fs . > trivyfs.txt'
+      }
+    }
+    
     stage("build") {  
       steps {
         sh 'docker compose -f docker-compose.yml build'
@@ -64,6 +81,17 @@ pipeline {
         sh 'docker push ikhela/mentoring:api-nest'
       }
     }
+
+    // scan trivy image 
+    stage('Trivy scan image'){
+      steps{
+        sh 'trivy ikhela/mentoring:web-next'
+        sh 'trivy ikhela/mentoring:api-nest'
+      }
+    }
+
+    // deploy to kubernetes 
+    
 
     stage('Clean') {
       steps {
