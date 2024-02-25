@@ -75,6 +75,14 @@ pipeline {
       }
     }
 
+    // scan trivy image 
+    stage('Trivy scan image'){
+      steps{
+        sh 'trivy --no-progress --exit-code 1 severity HIGH,CRITICAL ikhela/mentoring:web-next'
+        sh 'trivy --no-progress --exit-code 1 severity HIGH,CRITICAL ikhela/mentoring:api-nest'
+      }
+    }
+    
     stage('push docker image '){
       steps{
         sh 'docker push ikhela/mentoring:web-next'
@@ -82,26 +90,20 @@ pipeline {
       }
     }
 
-    // scan trivy image 
-    stage('Trivy scan image'){
-      steps{
-        sh 'trivy ikhela/mentoring:web-next'
-        sh 'trivy ikhela/mentoring:api-nest'
-      }
-    }
-
-    // deploy to kubernetes 
-    
-
-    stage('Clean') {
+    // stage('Clean') {
+    //   steps {
+    //     // Supprimer les images locales non utilisées
+    //     sh 'docker image rm api-nest:latest'
+    //     sh 'docker image rm web-next:latest'
+    //     sh "docker logout"
+    //   }
+    // }
+    stage("Deploy to container") {  
       steps {
-        // Supprimer les images locales non utilisées
-        sh 'docker image rm api-nest:latest'
-        sh 'docker image rm web-next:latest'
-        sh "docker logout"
+        sh 'docker compose -f docker-compose.yml up -d'
       }
     }
-  
+    
     stage('Email Notification'){
       steps {
         script{
