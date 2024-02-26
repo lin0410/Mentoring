@@ -1,11 +1,9 @@
 version: '3'
-
 x-defaults: &defaults
   networks:
     - ${NETWORK_CONTAINER}
   env_file:
       - ./.env
-
 services:
   prometheus:
     image: ${PROMETHEUS_IMG}
@@ -78,11 +76,9 @@ services:
     <<: *defaults
     labels:
       org.label-schema.group: "monitoring"
-
 networks:
   app_network:
     external: true
-
 volumes:
     prometheus_data:
     grafana_data:

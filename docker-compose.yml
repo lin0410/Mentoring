@@ -5,7 +5,7 @@ x-defaults: &defaults
     - ${NETWORK_CONTAINER}
   env_file:
       - ./.env
-  
+
 services:
   web:
     container_name: ${WEB_NAME}
@@ -39,5 +39,3 @@ services:
 networks:
   app_network:
     external: true
-    
-# for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg;

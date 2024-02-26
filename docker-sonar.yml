@@ -5,7 +5,6 @@ x-defaults: &defaults
     - ${NETWORK_CONTAINER}
   env_file:
       - ./.env
-      
 services:
   sonarqube:
     image: ${SONARQUBE}
@@ -33,7 +32,6 @@ services:
       - ${SONAR_LOCAL_PORT}:${SONAR_DOCKER_PORT}
     <<: *defaults
 
-     
   db:
     image: ${PG_IMG}
     container_name: postgresql
@@ -50,7 +48,6 @@ services:
       - postgresql_data:/var/lib/postgresql/data
     <<: *defaults
 
-  
   # mentoratdb:
   #   image: ${PG_IMG}
   #   container_name: mentoratdb
@@ -65,7 +62,6 @@ services:
   #     - POSTGRES_USER=${PG_USER}
   #     - POSTGRES_PASSWORD=${PG_PASSWORD}
   #   <<: *defaults
-
 
   adminer:
     image: ${ADMINER_IMG}
