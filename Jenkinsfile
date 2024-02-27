@@ -49,7 +49,7 @@ pipeline {
     // for owasp scan 
     stage("OWASP FS SCAN"){
       steps{
-        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'OWASP FS SCAN'
         dependencyCheckPublish pattern: '**/dependency-check-report.xml'
       }
     }
