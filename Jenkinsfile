@@ -102,13 +102,13 @@ pipeline {
         sh 'docker compose -f docker-compose.yml up -d'
       }
     }
-    stage("DAST") {
-      steps {
-          sshagent(credentials: ['zap']) {
-              sh "ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-211-212-239.ap-southeast-2.compute.amazonaws.com 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://13.211.212.234:8080/webapp' || true "
-          }
-      }
-    }
+    // stage("DAST") {
+    //   steps {
+    //       sshagent(credentials: ['zap']) {
+    //           sh "ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-211-212-239.ap-southeast-2.compute.amazonaws.com 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://13.211.212.234:8080/webapp' || true "
+    //       }
+    //   }
+    // }
     stage('Email Notification'){
       steps {
         script{
