@@ -47,21 +47,12 @@ pipeline {
     // }
     // install dependencies 
     // for owasp scan 
-<<<<<<< HEAD
-    stage("OWASP FS SCAN"){
-      steps{
-        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'OWASP FS SCAN'
-        dependencyCheckPublish pattern: '**/dependency-check-report.xml'
-      }
-    }
-=======
     // stage("OWASP FS SCAN"){
     //   steps{
     //     dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
     //     dependencyCheckPublish pattern: '**/dependency-check-report.xml'
     //   }
     // }
->>>>>>> a23627c (add a new setup for jenkins locally)
     // add trivy Scan for image 
     stage('TRIVY FS SCAN'){
       steps{
@@ -118,17 +109,6 @@ pipeline {
  //         }
 //      }
 //    }
-    stage('Email Notification'){
-      steps {
-        script{
-          // Send email notification 
-          mail to: 'kankoffi36@gmail.com', 
-                subject: "Jenkins Build Notification",
-                body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
-        }
-      }
-    }
-=======
     // stage('Email Notification'){
     //   steps {
     //     script{
@@ -139,6 +119,15 @@ pipeline {
     //     }
     //   }
     // }
->>>>>>> a23627c (add a new setup for jenkins locally)
+    // stage('Email Notification'){
+    //   steps {
+    //     script{
+    //       // Send email notification 
+    //       mail to: 'kankoffi36@gmail.com', 
+    //             subject: "Jenkins Build Notification",
+    //             body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
+    //     }
+    //   }
+    // }
   }
 }
