@@ -5,10 +5,10 @@ pipeline {
         nodejs 'node20'
   }
   environment{
-    // DOCKER_HUB_CREDENTIALS = credentials('docker-crd')
+    DOCKER_HUB_CREDENTIALS = credentials('docker-crd')
     EMAIL_ADDRESS = "kankoffi36@gmail.com"
     REPOSITORY_DOCKER_HUB =" ikhela/mentoring"
-    // SCANNER_HOME=tool 'sonar-scanner'
+    SCANNER_HOME=tool 'sonar-scanner'
   }
   stages {
     stage("verify tooling") {
@@ -26,33 +26,33 @@ pipeline {
           sh 'cat trufflehog'
       }
     }
-    // stage("Sonarqube Analysis "){
-    //     steps{
-    //         withSonarQubeEnv('sonar-server') {
-    //               sh '''${SCANNER_HOME}/bin/sonar-scanner \
-    //                     -Dsonar.projectKey=Mentoring \
-    //                     -Dsonar.sources=. \
-    //                     -Dsonar.host.url=http://172.25.66.200:9000 \
-    //                     -Dsonar.token=sqp_8104dfca8e8b1cddde4707399222741022708ce8
-    //                 '''
-    //         }
-    //     }
-    // }
-    // stage("quality gate"){
-    //   steps {
-    //         script {
-    //             waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
-    //         }
-    //     } 
-    // }
+    stage("Sonarqube Analysis "){
+        steps{
+            withSonarQubeEnv('sonar-server') {
+                  sh '''${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=Mentoring \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://172.25.66.200:9000 \
+                        -Dsonar.token=sqp_8104dfca8e8b1cddde4707399222741022708ce8
+                    '''
+            }
+        }
+    }
+    stage("quality gate"){
+      steps {
+            script {
+                waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
+            }
+        } 
+    }
     // install dependencies 
     // for owasp scan 
-    // stage("OWASP FS SCAN"){
-    //   steps{
-    //     dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-    //     dependencyCheckPublish pattern: '**/dependency-check-report.xml'
-    //   }
-    // }
+    stage("OWASP FS SCAN"){
+      steps{
+        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        dependencyCheckPublish pattern: '**/dependency-check-report.xml'
+      }
+    }
     // add trivy Scan for image 
     stage('TRIVY FS SCAN'){
       steps{
@@ -89,45 +89,45 @@ pipeline {
         sh 'docker push ikhela/mentoring:api-nest'
       }
     }
-    // stage('Clean') {
-    //   steps {
-    //     // Supprimer les images locales non utilisées
-    //     sh 'docker image rm api-nest:latest'
-    //     sh 'docker image rm web-next:latest'
-    //     sh "docker logout"
-    //   }
-    // }
-    //stage("Deploy to container") {  
-    //  steps {
-    //    sh 'docker compose -f docker-compose.yml up -d'
-    //  }
-   // }
-   // stage("DAST") {
-   //   steps {
-   //       sshagent(credentials: ['zap']) {
-  //sh "ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-211-212-239.ap-southeast-2.compute.amazonaws.com 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://13.211.212.234:8080/webapp' || true "
- //         }
-//      }
-//    }
-    // stage('Email Notification'){
-    //   steps {
-    //     script{
-    //       // Send email notification 
-    //       mail to: 'kankoffi36@gmail.com', 
-    //             subject: "Jenkins Build Notification",
-    //             body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
-    //     }
-    //   }
-    // }
-    // stage('Email Notification'){
-    //   steps {
-    //     script{
-    //       // Send email notification 
-    //       mail to: 'kankoffi36@gmail.com', 
-    //             subject: "Jenkins Build Notification",
-    //             body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
-    //     }
-    //   }
-    // }
+    stage('Clean') {
+      steps {
+        // Supprimer les images locales non utilisées
+        sh 'docker image rm api-nest:latest'
+        sh 'docker image rm web-next:latest'
+        sh "docker logout"
+      }
+    }
+    stage("Deploy to container") {  
+     steps {
+       sh 'docker compose -f docker-compose.yml up -d'
+     }
+   }
+   stage("DAST") {
+     steps {
+         sshagent(credentials: ['zap']) {
+  sh "ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-211-212-239.ap-southeast-2.compute.amazonaws.com 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://13.211.212.234:8080/webapp' || true "
+         }
+     }
+   }
+    stage('Email Notification'){
+      steps {
+        script{
+          // Send email notification 
+          mail to: 'kankoffi36@gmail.com', 
+                subject: "Jenkins Build Notification",
+                body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
+        }
+      }
+    }
+    stage('Email Notification'){
+      steps {
+        script{
+          // Send email notification 
+          mail to: 'kankoffi36@gmail.com', 
+                subject: "Jenkins Build Notification",
+                body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
+        }
+      }
+    }
   }
 }
