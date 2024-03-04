@@ -5,6 +5,7 @@ x-defaults: &defaults
     - ${NETWORK_CONTAINER}
   env_file:
       - ./.env
+
 services:
   sonarqube:
     image: ${SONARQUBE}
