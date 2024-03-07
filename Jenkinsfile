@@ -46,6 +46,11 @@ pipeline {
     //     } 
     // }
     // install dependencies 
+    stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+    }
     // for owasp scan 
     stage("OWASP-DP-CHECK"){
       steps{
