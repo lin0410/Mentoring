@@ -29,11 +29,11 @@ pipeline {
     stage("Sonarqube Analysis "){
         steps{
             withSonarQubeEnv('sonar-server') {
-                  sh '''${SCANNER_HOME}/bin/sonar-scanner \
+                  sh '''sonar-scanner \
                         -Dsonar.projectKey=Mentoring \
                         -Dsonar.sources=. \
-                        -Dsonar.host.url=http://172.25.66.200:9000 \
-                        -Dsonar.token=sqp_8104dfca8e8b1cddde4707399222741022708ce8
+                        -Dsonar.host.url=https://9000-lin0410-mentoring-p6mvl05p8k7.ws-eu108.gitpod.io \
+                        -Dsonar.token=sqp_0e8da3d1939cc8d8e37c390ac0cf1610f9cb903b
                     '''
             }
         }
