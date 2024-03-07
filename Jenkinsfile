@@ -8,7 +8,7 @@ pipeline {
     DOCKER_HUB_CREDENTIALS = credentials('docker-credentials')
     EMAIL_ADDRESS = "kankoffi36@gmail.com"
     REPOSITORY_DOCKER_HUB =" ikhela/mentoring"
-    SCANNER_HOME=tool 'sonar-scanner'
+    // SCANNER_HOME=tool 'sonar-scanner'
   }
   stages {
     stage("verify tooling") {
@@ -26,25 +26,25 @@ pipeline {
           sh 'cat trufflehog'
       }
     }
-    stage("Sonarqube Analysis "){
-        steps{
-            withSonarQubeEnv('sonar-server') {
-                  sh '''sonar-scanner \
-                        -Dsonar.projectKey=Mentoring \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=https://9000-lin0410-mentoring-p6mvl05p8k7.ws-eu108.gitpod.io \
-                        -Dsonar.token=sqp_0e8da3d1939cc8d8e37c390ac0cf1610f9cb903b
-                    '''
-            }
-        }
-    }
-    stage("quality gate"){
-      steps {
-            script {
-                waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
-            }
-        } 
-    }
+    // stage("Sonarqube Analysis "){
+    //     steps{
+    //         withSonarQubeEnv('sonar-server') {
+    //               sh '''sonar-scanner \
+    //                     -Dsonar.projectKey=Mentoring \
+    //                     -Dsonar.sources=. \
+    //                     -Dsonar.host.url=https://9000-lin0410-mentoring-p6mvl05p8k7.ws-eu108.gitpod.io \
+    //                     -Dsonar.token=sqp_0e8da3d1939cc8d8e37c390ac0cf1610f9cb903b
+    //                 '''
+    //         }
+    //     }
+    // }
+    // stage("quality gate"){
+    //   steps {
+    //         script {
+    //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+    //         }
+    //     } 
+    // }
     // install dependencies 
     // for owasp scan 
     stage("OWASP FS SCAN"){
@@ -109,16 +109,16 @@ pipeline {
   //        }
   //    }
   //  }
-    stage('Email Notification'){
-      steps {
-        script{
-          // Send email notification 
-          mail to: 'kankoffi36@gmail.com', 
-                subject: "Jenkins Build Notification",
-                body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
-        }
-      }
-    }
+    // stage('Email Notification'){
+    //   steps {
+    //     script{
+    //       // Send email notification 
+    //       mail to: 'kankoffi36@gmail.com', 
+    //             subject: "Jenkins Build Notification",
+    //             body: "Pipeline: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\n${BUILD_URL}\n\n Succes build and push image"
+    //     }
+    //   }
+    // }
   }
   post {
      always {
@@ -127,7 +127,7 @@ pipeline {
             body: "Project: ${env.JOB_NAME}<br/>" +
                 "Build Number: ${env.BUILD_NUMBER}<br/>" +
                 "URL: ${env.BUILD_URL}<br/>",
-            to: 'kankoffi36@gmail.com',  
+            to: 'lingardkent@gmail.com',  
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
