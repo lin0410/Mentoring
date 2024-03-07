@@ -5,7 +5,7 @@ pipeline {
         nodejs 'node20'
   }
   environment{
-    DOCKER_HUB_CREDENTIALS = credentials('docker-crd')
+    DOCKER_HUB_CREDENTIALS = credentials('docker-credentials')
     EMAIL_ADDRESS = "kankoffi36@gmail.com"
     REPOSITORY_DOCKER_HUB =" ikhela/mentoring"
     SCANNER_HOME=tool 'sonar-scanner'
